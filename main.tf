@@ -30,3 +30,10 @@ resource "azurerm_virtual_network" "MyNetwork" {
   resource_group_name = azurerm_resource_group.MyResource.name
   address_space       = ["10.0.0.0/16"]
 }
+
+resource "azurerm_subnet" "MySubnet" {
+  name                 = "testsubnet"
+  resource_group_name  = azurerm_resource_group.MyResource.name
+  virtual_network_name = azurerm_virtual_network.MyNetwork.name
+  address_prefixes     = ["10.0.1.0/24"]
+}
