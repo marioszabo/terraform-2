@@ -13,7 +13,8 @@ resource "azurerm_subnet" "MySubnet" {
 }
 
 resource "azurerm_network_interface" "example" {
-  name                = "example-nic"
+  count               = var.vm_count
+  name                = "example-nic-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
 
