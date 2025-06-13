@@ -7,3 +7,8 @@ variable "location" {
   description = "Location/region for all network resources"
   type        = string
 }
+
+variable "vm_count" {
+  description = "Number of NICs (one per VM) to create"
+  type        = number
+}
