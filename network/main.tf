@@ -11,27 +11,6 @@ resource "azurerm_subnet" "MySubnet" {
   virtual_network_name = azurerm_virtual_network.MyNetwork.name
   address_prefixes     = ["10.0.1.0/24"]
 }
-# Added comment to test PR
-
-resource "azurerm_network_interface" "example" {
-  count               = var.vm_count
-  name                = "example-nic-${count.index}"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.MySubnet.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.vm_publc_ip[count.index].id
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-}
 
 resource "azurerm_public_ip" "vm_public_ip" {
   count               = var.vm_count
@@ -41,12 +20,29 @@ resource "azurerm_public_ip" "vm_public_ip" {
   allocation_method   = "Static"
   sku                 = "Basic"
 }
-resource "azurerm_network_security_group" "example-sg" {
 
-  name                = "example-sg"
+resource "azurerm_network_interface" "example" {
+  count               = var.vm_count
+  name                = "example-nic-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
 
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.MySubnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.vm_public_ip[count.index].id
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "azurerm_network_security_group" "example_sg" {
+  name                = "example-sg"
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   security_rule {
     name                       = "AllowSSH"
@@ -64,24 +60,23 @@ resource "azurerm_network_security_group" "example-sg" {
 resource "azurerm_network_interface_security_group_association" "example" {
   count                     = var.vm_count
   network_interface_id      = azurerm_network_interface.example[count.index].id
-  network_security_group_id = azurerm_network_security_group.example-sg.id
+  network_security_group_id = azurerm_network_security_group.example_sg.id
 }
-resource "azurerm_public_ip" "lb-public-ip" {
+
+resource "azurerm_public_ip" "lb_public_ip" {
   name                = "publicip_lb"
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
-
 }
 
-
-resource "azurerm_lb" "example-lb" {
+resource "azurerm_lb" "example_lb" {
   name                = "example-lb"
   location            = var.location
   resource_group_name = var.resource_group_name
 
   frontend_ip_configuration {
     name                 = "PublicIP"
-    public_ip_address_id = azurerm_public_ip.lb-public-ip.id
+    public_ip_address_id = azurerm_public_ip.lb_public_ip.id
   }
 }
