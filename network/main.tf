@@ -35,7 +35,7 @@ resource "azurerm_network_interface" "example" {
 
 resource "azurerm_public_ip" "vm_public_ip" {
   count               = var.vm_count
-  name                = "vm_publc_ip-${count.index}"
+  name                = "vm_public_ip-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
@@ -63,8 +63,8 @@ resource "azurerm_network_security_group" "example-sg" {
 
 resource "azurerm_network_interface_security_group_association" "example" {
   count                     = var.vm_count
-  network_interface_id      = azurerem_network_interface.example[count.index].id
-  network_security_group_id = azurerm_network_security_group_example-sg.id
+  network_interface_id      = azurerm_network_interface.example[count.index].id
+  network_security_group_id = azurerm_network_security_group.example-sg.id
 }
 resource "azurerm_public_ip" "lb-public-ip" {
   name                = "publicip_lb"
