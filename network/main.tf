@@ -11,6 +11,7 @@ resource "azurerm_subnet" "MySubnet" {
   virtual_network_name = azurerm_virtual_network.MyNetwork.name
   address_prefixes     = ["10.0.1.0/24"]
 }
+# Added comment to test PR
 
 resource "azurerm_network_interface" "example" {
   count               = var.vm_count
@@ -29,7 +30,6 @@ resource "azurerm_network_interface" "example" {
     create_before_destroy = true
   }
 
-  network_security_group_id = azurerm_network_security_group.example-sg.id
 }
 
 resource "azurerm_network_security_group" "example-sg" {
