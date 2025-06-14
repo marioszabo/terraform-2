@@ -24,6 +24,10 @@ resource "azurerm_network_interface" "example" {
     subnet_id                     = azurerm_subnet.MySubnet.id
     private_ip_address_allocation = "Dynamic"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "azurerm_network_security_group" "example-sg" {
