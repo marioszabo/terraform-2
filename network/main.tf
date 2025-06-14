@@ -24,6 +24,7 @@ resource "azurerm_network_interface" "example" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.MySubnet.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.vm_publc_ip[count.index].id
   }
 
   lifecycle {
@@ -32,6 +33,14 @@ resource "azurerm_network_interface" "example" {
 
 }
 
+resource "azurerm_public_ip" "vm_public_ip" {
+  count               = var.vm_count
+  name                = "vm_publc_ip-${count.index}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  allocation_method   = "Static"
+  sku                 = "Basic"
+}
 resource "azurerm_network_security_group" "example-sg" {
 
   name                = "example-sg"
@@ -52,6 +61,11 @@ resource "azurerm_network_security_group" "example-sg" {
   }
 }
 
+resource "azurerm_network_interface_security_group_association" "example" {
+  count                     = var.vm_count
+  network_interface_id      = azurerem_network_interface.example[count.index].id
+  network_security_group_id = azurerm_network_security_group_example-sg.id
+}
 resource "azurerm_public_ip" "lb-public-ip" {
   name                = "publicip_lb"
   location            = var.location
