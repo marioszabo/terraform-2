@@ -5,5 +5,5 @@ output "network_interface_id" {
 
 output "public_ip_address" {
   description = "Public IP address allocated for the load balancer"
-  value       = azurerm_public_ip.lb-public-ip.ip_address
+  value       = azurerm_public_ip.lb_public_ip.ip_address
 }
