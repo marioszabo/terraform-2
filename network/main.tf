@@ -55,6 +55,30 @@ resource "azurerm_network_security_group" "example_sg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  security_rule {
+    name                       = "AllowInternetOut"
+    priority                   = 1002
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "Internet"
+    destination_port_range     = "*"
+  }
+
+  security_rule {
+    name                       = "AllowHTTP"
+    priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
 }
 
 resource "azurerm_network_interface_security_group_association" "example" {
@@ -62,4 +86,3 @@ resource "azurerm_network_interface_security_group_association" "example" {
   network_interface_id      = azurerm_network_interface.example[count.index].id
   network_security_group_id = azurerm_network_security_group.example_sg.id
 }
-
