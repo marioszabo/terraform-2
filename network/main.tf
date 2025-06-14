@@ -28,6 +28,8 @@ resource "azurerm_network_interface" "example" {
   lifecycle {
     create_before_destroy = true
   }
+
+  network_security_group_id = azurerm_network_security_group.example-sg.id
 }
 
 resource "azurerm_network_security_group" "example-sg" {
@@ -43,11 +45,10 @@ resource "azurerm_network_security_group" "example-sg" {
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
-    source_port_range          = 22
-    destination_port_range     = "*"
+    source_port_range          = "*"
+    destination_port_range     = "22"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
-
   }
 }
 
