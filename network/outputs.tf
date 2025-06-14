@@ -3,7 +3,3 @@ output "network_interface_id" {
   value       = azurerm_network_interface.example[*].id
 }
 
-output "public_ip_address" {
-  description = "Public IP address allocated for the load balancer"
-  value       = azurerm_public_ip.lb_public_ip.ip_address
-}
