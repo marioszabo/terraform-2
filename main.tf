@@ -31,15 +31,16 @@ module "network" {
   source              = "./network"
   resource_group_name = var.resource_group_name
   location            = var.location
-  vm_count            = var.vm_count
-  depends_on          = [azurerm_resource_group.MyResource]
+
+  depends_on = [azurerm_resource_group.MyResource]
 }
 
 module "vm" {
-  source               = "./vm"
-  location             = var.location
-  resource_group_name  = var.resource_group_name
-  network_interface_id = module.network.network_interface_id
-  vm_count             = var.vm_count
-  vm_public_key        = var.vm_public_key
+  source              = "./vm"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  subnet_id           = module.network.subnet_id
+  nsg_id              = module.network.nsg_id # Optional
+  vm_public_key       = var.vm_public_key
+  enable_public_ip    = true
 }

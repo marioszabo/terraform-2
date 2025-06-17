@@ -1,8 +1,14 @@
-output "network_interface_id" {
-  description = "ID(s) of the network interface(s) created"
-  value       = azurerm_network_interface.example[*].id
+output "subnet_id" {
+  description = "ID of the subnet"
+  value       = azurerm_subnet.example.id
 }
 
-output "vm_public_ips" {
-  value = azurerm_public_ip.vm_public_ip[*].ip_address
+output "vnet_id" {
+  description = "ID of the virtual network"
+  value       = azurerm_virtual_network.example.id
+}
+
+output "nsg_id" {
+  description = "ID of the network security group"
+  value       = azurerm_network_security_group.example.id
 }
